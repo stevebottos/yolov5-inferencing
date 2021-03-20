@@ -16,16 +16,12 @@ from utils.plots import plot_one_box
 from utils.torch_utils import select_device, load_classifier, time_synchronized
 
 
-def detect(model, weights, device, image, imgsz):  
+def detect(model, device, image, imgsz):  
 
     # Redefining opts here
     # im0 = image
     original_shape = image.shape
-    print(original_shape)
     img = image
-    project = "runs/detect"
-    name = "exp"
-    save_img = True
     conf_thresh = 0.25
     iou_thresh = 0.45
     classes = [0] # Filters our only people
@@ -42,10 +38,6 @@ def detect(model, weights, device, image, imgsz):
 
     batch_of_one = np.array([img])
     img = torch.from_numpy(batch_of_one).to(device).float() / 255.0
-
-    # Directories
-    save_dir = Path(increment_path(Path(project) / name, exist_ok=True))  # increment run
-    (save_dir).mkdir(parents=True, exist_ok=True)  # make dir
 
     # Get names and colors
     names = model.module.names if hasattr(model, 'module') else model.names
