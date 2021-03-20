@@ -16,10 +16,12 @@ from utils.plots import plot_one_box
 from utils.torch_utils import select_device, load_classifier, time_synchronized
 
 
-def detect(model, weights, device, image, imgsz = 640):  
+def detect(model, weights, device, image, imgsz):  
 
     # Redefining opts here
-    im0 = image
+    # im0 = image
+    original_shape = image.shape
+    print(original_shape)
     img = image
     project = "runs/detect"
     name = "exp"
@@ -61,6 +63,6 @@ def detect(model, weights, device, image, imgsz = 640):
 
     # Process detections
     for i, det in enumerate(pred):  # detections per image
-        det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
+        det[:, :4] = scale_coords(img.shape[2:], det[:, :4], original_shape).round()
         
     return det.detach().cpu().numpy()
